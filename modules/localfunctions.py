@@ -20,7 +20,7 @@ def sendmsg(msg, ircsock): # sends messages to the channel.
 def joinchan(chan, ircsock): # join channel(s).
 #  time.sleep(5)
   ircsock.send("JOIN "+ chan +"\n")
-#  print("Joining %s" %chan)
+#  customlogging.log("Joining %s" %chan)
   return True
 
 def quitirc(ircsock):
@@ -34,13 +34,13 @@ def whisper(msg, user, ircsock): # whisper a user
 def sed(msg, ircsock):
   # detect if there are fewer than 2 '/' in the message. If so, not a valid find/replace pair, do nothing.
   if msg.count('/') < 2:
-    print("not enough arguments")
+    customlogging.log("not enough arguments")
     return
   # get the text between the first and last '/' as the 'find' portion
   sedtest=msg.split('/',1)[1].rsplit('/',1)[0]
   # if there is no text between the first and last '/' (as in 's//somethin') do nothing because there is nothing to find.
   if sedtest == '':
-    print("Nothing to find")
+    customlogging.log("Nothing to find")
     return
   # set the replace text to everything after the last '/'
   sreplace=msg.split('/',1)[1].rsplit('/',1)[1]
@@ -58,7 +58,7 @@ def sed(msg, ircsock):
       pass
   # if the default replaced text was not changed, no matches were found in the log, do nothing.
   if replaced == ".__not found__.":
-    print("not found")
+    customlogging.log("not found")
     return
   else:
   # if the default replaced text was found, perform a replace on the text, strip any newlines, and send to checksend method for verification before sending to channel.
@@ -71,13 +71,13 @@ def sed(msg, ircsock):
 def regex(msg, ircsock):
   #detect if there are fewer than 2 '|' in the message. If so, not a valid find/replace pair, do nothing.
   if msg.count('|') < 2:
-    print("Not enough arguments")
+    customlogging.log("Not enough arguments")
     return
   # get the text between the first and last '|' as the 'find portion
   sedtest = msg.split('|',1)[1].rsplit('|',1)[0]
   # if there is no text between the first and last '|' (as in 's||somethin') do nothing because there is nothing to find.
   if sedtest == '':
-    print("Nothing to find")
+    customlogging.log("Nothing to find")
     return
   # set the replace text to everything after the last '|'
   sreplace = msg.split('|',1)[1].rsplit('|',1)[1]
@@ -120,7 +120,7 @@ def regex(msg, ircsock):
         name = i.split(":",1)[0]
     # ignore errors and continue. --Needs further testing
     except Exception:
-      print('error in search')
+      customlogging.log('error in search')
       pass
   # if the regex found more than 10 matches, assume it was too broad and let the user know. --Change to whisper?
   if repltext[1] > 10:
@@ -181,6 +181,6 @@ def help(name,ircsock,topic=''):
   # if a help message is specified, let the user know it's not coded yet.
   else:
     message = "Feature not yet implemented, sorry. Please see the main help (message me with \'.help\')"
-  print(topic)
+  customlogging.log(topic)
   # send help message in whisper to user.
   whisper(message, name, ircsock)
