@@ -1,6 +1,6 @@
 # ircbot
 
-#Configuration
+# Configuration
 
 edit the following entries with your keys/servers etc
 
@@ -17,6 +17,6 @@ Line 21-24: api = twitter.Api(consumer_key='',
             access_token_key='',
             access_token_secret='')
 
-#Usage
+# Usage
 
 python main.py
