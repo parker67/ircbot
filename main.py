@@ -11,9 +11,9 @@ irc = irc_comms()
 # Some basic variables used to configure the bot        
 server = "" # Server
 channel = "" # Channel
-lines = 0
 botnick = "" # Your bots nick
 password = ""
+lines = 0
 ircsock = irc.connect(server,channel,botnick,password,lines)
 
 # main functions of the bot
