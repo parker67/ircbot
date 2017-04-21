@@ -4,14 +4,15 @@
 import socket, re, subprocess, os, time, threading, sys, time
 from modules.localfunctions import *
 from modules.customlogging import *
+from modules.twit import *
 
 customlog = customlogging.customlog()
 irc = irc_comms()
 # Some basic variables used to configure the bot        
-server = "192.168.1.110" # Server
-channel = "##bot-testing" # Channel
+server = "" # Server
+channel = "" # Channel
 lines = 0
-botnick = "Python-IRC" # Your bots nick
+botnick = "" # Your bots nick
 password = ""
 ircsock = irc.connect(server,channel,botnick,password,lines)
 
@@ -38,7 +39,7 @@ def main():
        customlog.cust_log(ircmsg) 
        # repsond to pings so server doesn't think we've disconnected
        if ircmsg.find("PING :") != -1: 
-         irc.ping()
+         irc.ping(ircsock)
        # look for PRIVMSG lines as these are messages in the channel or sent to the bot
        if ircmsg.find("PRIVMSG") != -1:
          # save user name into name variable
@@ -54,9 +55,27 @@ def main():
            if message.find("status") != -1:
             customlog.cust_log("Caught twitter")
             irc.sendmsg("Oh...okay... looking up tweet. Please wait", channel, ircsock)
+            stat = get_statusid(message)
+            twitter = twit_worm()
+            name, status = twitter.get(stat)
+            name = "Name: " + name
+            status = "Status: " + status
+            irc.sendmsg(name, channel, ircsock)
+            irc.sendmsg(status, channel, ircsock)
            else:
             customlog.cust_log("Not a status page")
             irc.sendmsg("Sorry that doesnt look to be a valid twitter status page. Please try again", channel, ircsock)
+         elif message.find("youtube.com") != -1:
+           if message.find("watch") != -1:
+            customlog.cust_log("Caught youtube")
+            irc.sendmsg("Oh...okay... looking up youtube video. Please wait", channel, ircsock)
+            youtubeid = get_youtubeid(message)
+            youtub = youtube()
+            title, chan = youtub.get_title(youtubeid)
+            title = "Video: " + title
+            chan = "Channel Title: " + chan
+            irc.sendmsg(title, channel, ircsock)
+            irc.sendmsg(chan, channel, ircsock)
          else:
          # if no command found, get 
            if len(name) < 17:

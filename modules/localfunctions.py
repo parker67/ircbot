@@ -84,3 +84,13 @@ class irc_comms(object):
 	  customlogging.log(topic)
 	  # send help message in whisper to user.
 	  self.whisper(message, name, ircsock)
+
+def get_statusid(message):
+	message = message.split("/")
+	status = message[-1]
+	return status 
+
+def get_youtubeid(message):
+	message = message.split("=")
+	youtube = message[-1]
+	return youtube
